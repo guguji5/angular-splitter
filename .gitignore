@@ -1,0 +1,12 @@
+node_modules
+node_modules.*/
+
+/e2e/*.js
+/e2e/*.map
+
+.DS_Store
+.idea/
+.project
+.classpath
+.c9/
+package-lock.json

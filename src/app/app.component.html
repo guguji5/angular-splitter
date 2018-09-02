@@ -1,0 +1,12 @@
+<!-- <router-outlet></router-outlet> -->
+<tam-splitter splitterBarWidth=8>
+    <tam-splitter-panel [size]="snippetView.refinedByWidth" [max]="snippetView.refinedByMax" [min]="snippetView.refinedByMin">
+        Refined By Panel
+    </tam-splitter-panel>
+    <tam-splitter-panel [size]="snippetView.middleWidth" [max]="snippetView.middleMax" [min]="snippetView.middleMin">
+        Side List Panel
+    </tam-splitter-panel>
+    <tam-splitter-panel [size]="snippetView.previewWidth" [max]="snippetView.previewMax" [min]="snippetView.previewMin">
+        Preview Panel
+    </tam-splitter-panel>
+</tam-splitter>
