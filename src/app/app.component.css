@@ -3,3 +3,12 @@
     height:100%;
     display:block;
 }
+button{
+    position:fixed;
+    bottom:10px;
+    left:10px;
+}
+button.btn{
+    right:10px;
+    left:auto;
+}

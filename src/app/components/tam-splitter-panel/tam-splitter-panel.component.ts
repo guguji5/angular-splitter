@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional, Renderer2, Input, ElementRef, HostBinding } from '@angular/core';
+import { Component, OnInit, Optional, Renderer2, Input, ElementRef, HostBinding, Output, EventEmitter } from '@angular/core';
 import { TamSplitterComponent } from '../tam-splitter/tam-splitter.component';
 
 @Component({
@@ -9,6 +9,7 @@ import { TamSplitterComponent } from '../tam-splitter/tam-splitter.component';
 export class TamSplitterPanelComponent implements OnInit {
     private _order: number | null = null;
     private _size: number | null = null;
+    private _visible: boolean;
     @Input() set size(v: number | null) {
         this._size = Number(v);
         this.splitterComponent.updateArea(this);
@@ -27,8 +28,36 @@ export class TamSplitterPanelComponent implements OnInit {
     get order(): number | null {
         return this._order;
     }
+    @Input() index: number;
+
     @Input() max: number;
     @Input() min: number;
+    @Input() set visible(v: boolean) {
+        let sizeArr = this.splitterComponent.displayedPanels.map(value => value.size)
+        // prevent the event fired in the init process
+        if (sizeArr.length > 0) {
+            this.collapsedChange.emit({
+                collapsed: !v,
+                sizes: sizeArr,
+                collapsedComponentSize: this.size
+            })
+        }
+
+        v = (typeof (v) === 'boolean') ? v : (v === 'false' ? false : true);
+        this._visible = v;
+        if (this.visible) {
+            this.splitterComponent.showArea(this);
+        }
+        else {
+            this.splitterComponent.hideArea(this);
+        }
+    };
+
+    get visible(): boolean {
+        return this._visible;
+    }
+    @Output() collapsedChange: EventEmitter<any> = new EventEmitter();
+
     constructor(@Optional() public splitterComponent: TamSplitterComponent, private renderer: Renderer2, private elRef: ElementRef) { }
 
     ngOnInit() {
@@ -38,6 +67,10 @@ export class TamSplitterPanelComponent implements OnInit {
 
         this.renderer.setStyle(this.elRef.nativeElement, 'flex-grow', '0');
         this.renderer.setStyle(this.elRef.nativeElement, 'flex-shrink', '0');
+    }
+    ngOnDestroy(): void {
+
+        this.splitterComponent.removeArea(this);
     }
 
     public setStyleOrder(value: number): void {
@@ -51,4 +84,29 @@ export class TamSplitterPanelComponent implements OnInit {
         return this.elRef.nativeElement[prop];
     }
 
+    public setStyleVisibleAndDir(isVisible: boolean, isDragging: boolean, direction: 'horizontal' | 'vertical'): void {
+        if (isVisible === false) {
+            this.setStyleFlexbasis('0');
+            this.renderer.setStyle(this.elRef.nativeElement, 'overflow-x', 'hidden');
+            this.renderer.setStyle(this.elRef.nativeElement, 'overflow-y', 'hidden');
+
+            if (direction === 'vertical') {
+                this.renderer.setStyle(this.elRef.nativeElement, 'max-width', '0');
+            }
+        }
+        else {
+            this.renderer.setStyle(this.elRef.nativeElement, 'overflow-x', 'hidden');
+            this.renderer.setStyle(this.elRef.nativeElement, 'overflow-y', 'auto');
+            this.renderer.removeStyle(this.elRef.nativeElement, 'max-width');
+        }
+
+        if (direction === 'horizontal') {
+            this.renderer.setStyle(this.elRef.nativeElement, 'height', '100%');
+            this.renderer.removeStyle(this.elRef.nativeElement, 'width');
+        }
+        else {
+            this.renderer.setStyle(this.elRef.nativeElement, 'width', '100%');
+            this.renderer.removeStyle(this.elRef.nativeElement, 'height');
+        }
+    }
 }

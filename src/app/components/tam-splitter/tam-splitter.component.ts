@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, NgZone, ElementRef, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { TamSplitterPanelComponent } from '../tam-splitter-panel/tam-splitter-panel.component';
+import index from './../../services/count'
 
 interface IPoint {
     x: number;
@@ -12,7 +13,9 @@ interface IPoint {
     styleUrls: ['./tam-splitter.component.css']
 })
 export class TamSplitterComponent implements OnInit {
-    splitterPanelArray: Array<TamSplitterPanelComponent> = [];
+    public readonly displayedPanels: Array<TamSplitterPanelComponent> = [];
+    private readonly hidedPanels: Array<TamSplitterPanelComponent> = [];
+
     @Input() splitterBarWidth: number;
     currentbarNum: number;
     draggingWithoutMove: boolean;
@@ -30,59 +33,115 @@ export class TamSplitterComponent implements OnInit {
 
     constructor(private ngZone: NgZone, private elRef: ElementRef,
         private cdRef: ChangeDetectorRef,
-        private renderer: Renderer2) { }
+        private renderer: Renderer2) {
+    }
 
     ngOnInit() {
     }
 
-    addSplitterPanel(panel: TamSplitterPanelComponent): void {
-        this.splitterPanelArray.push(panel);
-        this.build();
-    }
+
 
     ngAfterViewInit() {
     }
 
     build() {
-        // const totalUserSize = <number>this.splitterPanelArray.reduce((total: number, panel: TamSplitterPanelComponent) => {
+        // const totalUserSize = <number>this.displayedPanels.reduce((total: number, panel: TamSplitterPanelComponent) => {
         //     return panel.size ? total + Number(panel.size) : total
         // }, 0);
-        // console.log(this.splitterPanelArray);
+        // console.log(this.displayedPanels);
         // if (totalUserSize < 100) {
-        //     const panelLength = this.splitterPanelArray.length;
+        //     const panelLength = this.displayedPanels.length;
         //     const averageSize = 100 / panelLength;
-        //     this.splitterPanelArray.forEach((panel: TamSplitterPanelComponent, key: number) => {
-        //         panel.setStyleFlexbasis(`calc( ${panel.size}% - ${this.splitterBarWidth * (this.splitterPanelArray.length - 1) / this.splitterPanelArray.length}px )`)
+        //     this.displayedPanels.forEach((panel: TamSplitterPanelComponent, key: number) => {
+        //         panel.setStyleFlexbasis(`calc( ${panel.size}% - ${this.splitterBarWidth * (this.displayedPanels.length - 1) / this.displayedPanels.length}px )`)
         //         panel.order = 2 * key;
         //     })
         // } else {
-        //     this.splitterPanelArray.forEach((panel: TamSplitterPanelComponent, key: number) => {
-        //         panel.setStyleFlexbasis(`calc( ${panel.size}% - ${this.splitterBarWidth * (this.splitterPanelArray.length - 1) / this.splitterPanelArray.length}px )`)
+        //     this.displayedPanels.forEach((panel: TamSplitterPanelComponent, key: number) => {
+        //         panel.setStyleFlexbasis(`calc( ${panel.size}% - ${this.splitterBarWidth * (this.displayedPanels.length - 1) / this.displayedPanels.length}px )`)
         //         panel.order = 2 * key;
         //     })
         // }
-        this.splitterPanelArray.forEach((panel: TamSplitterPanelComponent, key: number) => {
+
+        if (this.displayedPanels.every(a => a.index !== null)) {
+            this.displayedPanels.sort((a, b) => (<number>a.index) - (<number>b.index));
+        }
+
+        // Then set real order with multiples of 2, numbers between will be used by gutters.
+        this.displayedPanels.forEach((panel: TamSplitterPanelComponent, key: number) => {
             panel.order = 2 * key;
         })
         this.refreshStyleSizes();
     }
     private refreshStyleSizes(): void {
-        const sumbarSize = this.splitterBarWidth * (this.splitterPanelArray.length - 1);
+        const sumbarSize = this.splitterBarWidth * (this.displayedPanels.length - 1);
 
-        this.splitterPanelArray.forEach(panel => {
+        this.displayedPanels.forEach(panel => {
             panel.setStyleFlexbasis(`calc( ${panel.size}% - ${sumbarSize * panel.size / 100}px )`)
         });
     }
 
-    public updateArea(comp: TamSplitterPanelComponent): void {
+    addSplitterPanel(panel: TamSplitterPanelComponent): void {
+        panel.index = index();
+        if (panel.visible) {
+            this.displayedPanels.push(panel)
+        } else {
+            this.hidedPanels.push(panel);
+        }
+
+        this.build();
+    }
+
+    public updateArea(panel: TamSplitterPanelComponent): void {
         // Only refresh if area is displayed (No need to check inside 'hidedAreas')
 
-        const item = this.splitterPanelArray.find(a => a === comp);
+        const item = this.displayedPanels.find(a => a === panel);
         if (item) {
             this.build();
         }
     }
+    public showArea(panel: TamSplitterPanelComponent): void {
+        const area = this.hidedPanels.find(a => a === panel);
 
+        if (area) {
+            panel.setStyleVisibleAndDir(panel.visible, this.isDragging, this.direction);
+
+            const areas = this.hidedPanels.splice(this.hidedPanels.indexOf(area), 1);
+            this.displayedPanels.push(...areas);
+
+            this.build();
+        }
+    }
+
+    public hideArea(panel: TamSplitterPanelComponent): void {
+        const area = this.displayedPanels.find(a => a === panel);
+
+        if (area) {
+            panel.setStyleVisibleAndDir(panel.visible, this.isDragging, this.direction);
+
+            const areas = this.displayedPanels.splice(this.displayedPanels.indexOf(area), 1);
+            // areas.forEach(area => {
+            //     area.order = 0;
+            //     // area.size = 0;
+            // })
+            this.hidedPanels.push(...areas);
+
+            this.build();
+        }
+    }
+    public removeArea(panel: TamSplitterPanelComponent): void {
+        if (this.displayedPanels.some(a => a === panel)) {
+            const area = <TamSplitterPanelComponent>this.displayedPanels.find(a => a === panel)
+            this.displayedPanels.splice(this.displayedPanels.indexOf(area), 1);
+
+            this.build();
+        }
+        else if (this.hidedPanels.some(a => a === panel)) {
+            const area = <TamSplitterPanelComponent>this.hidedPanels.find(a => a === panel)
+            this.hidedPanels.splice(this.hidedPanels.indexOf(area), 1);
+        }
+    }
+    /* below function is used for the drag event */
     public startDragging(startEvent: MouseEvent | TouchEvent, barOrder: number, barNum: number): void {
         startEvent.preventDefault();
 
@@ -96,8 +155,8 @@ export class TamSplitterComponent implements OnInit {
         });
 
 
-        const panelA = this.splitterPanelArray.find(a => a.order === barOrder - 1);
-        const panelB = this.splitterPanelArray.find(a => a.order === barOrder + 1);
+        const panelA = this.displayedPanels.find(a => a.order === barOrder - 1);
+        const panelB = this.displayedPanels.find(a => a.order === barOrder + 1);
 
         if (!panelA || !panelB) {
             return;

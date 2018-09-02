@@ -6,4 +6,8 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: 60%;
+    
+}
+:host:hover{
+    /* cursor:move; */
 }
