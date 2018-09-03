@@ -47,12 +47,17 @@ export class AppComponent {
     changeDir() {
         // this.snippetView.middleShow = !this.snippetView.middleShow;
         this.snippetView.direction = this.snippetView.direction === "horizontal" ? "vertical" : "horizontal"
+
     }
     collapsedChange(e) {
         if (e.collapsed) {
             this.snippetView.previewWidth = e.collapsedComponentSize + e.sizes[e.sizes.length - 1]
+            this.snippetView.previewMax = 80;
+            this.snippetView.previewMin = 60;
         } else {
-            this.snippetView.previewWidth = e.sizes[e.sizes.length - 1] - e.collapsedComponentSize
+            this.snippetView.previewWidth = e.sizes[e.sizes.length - 1] - e.collapsedComponentSize;
+            this.snippetView.previewMax = 70;
+            this.snippetView.previewMin = 30;
         }
     }
     sizeChange(e) {

@@ -176,7 +176,14 @@ export class TamSplitterComponent implements OnInit {
 
 
         const panelA = this.displayedPanels.find(a => a.order === barOrder - 1);
-        const panelB = this.displayedPanels.find(a => a.order === barOrder + 1);
+        let panelB;
+        // as tamale need, when user drag the first panel(refineBy panel), its width should give the preview panel(the last one)
+        if (barOrder === 1 && this.displayedPanels.length === 3 && this.direction === "horizontal") {
+            panelB = this.displayedPanels.find(a => a.order === 4);
+        } else {
+            panelB = this.displayedPanels.find(a => a.order === barOrder + 1);
+
+        }
 
         if (!panelA || !panelB) {
             return;
