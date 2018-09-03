@@ -1,0 +1,19 @@
+<tam-splitter splitterBarWidth=3>
+    <tam-splitter-panel [size]="20" [max]="30" [min]="10" (collapsedChange)="collapsedChange($event)">
+        Refined By Panel
+    </tam-splitter-panel>
+
+    <tam-splitter-panel [size]="80">
+
+        <tam-splitter splitterBarWidth=3 [direction]="'vertical'">
+            <tam-splitter-panel [size]="30" [max]="40" [min]="20">
+                Side List Panel
+            </tam-splitter-panel>
+
+            <tam-splitter-panel [size]="70" [max]="80" [min]="60">
+                Preview Panel
+            </tam-splitter-panel>
+        </tam-splitter>
+    </tam-splitter-panel>
+
+</tam-splitter>

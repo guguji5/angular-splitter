@@ -108,7 +108,7 @@ export class TamSplitterComponent implements OnInit {
         } else {
             this.hidedPanels.push(panel);
         }
-
+        panel.setStyleVisibleAndDir(panel.visible, this.isDragging, this.direction);
         this.build();
     }
 

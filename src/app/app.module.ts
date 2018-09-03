@@ -6,6 +6,8 @@ import { AppRoutingModule } from './/app-routing.module';
 import { TamSplitterComponent } from './components/tam-splitter/tam-splitter.component';
 import { TamSplitterPanelComponent } from './components/tam-splitter-panel/tam-splitter-panel.component';
 import { TamSplitterBarComponent } from './components/tam-splitter-bar/tam-splitter-bar.component';
+import { SimpleSplitterComponent } from './pages/simple-splitter/simple-splitter.component';
+import { NestedSplitterComponent } from './pages/nested-splitter/nested-splitter.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +15,8 @@ import { TamSplitterBarComponent } from './components/tam-splitter-bar/tam-split
     TamSplitterComponent,
     TamSplitterPanelComponent,
     TamSplitterBarComponent,
+    SimpleSplitterComponent,
+    NestedSplitterComponent,
   ],
   imports: [
     BrowserModule,

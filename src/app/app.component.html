@@ -1,15 +1,1 @@
-<!-- <router-outlet></router-outlet> -->
-<tam-splitter splitterBarWidth=3 [direction]="snippetView.direction" (sizeChange)="sizeChange($event)">
-    <tam-splitter-panel [size]="snippetView.refinedByWidth" [max]="snippetView.refinedByMax" [min]="snippetView.refinedByMin"
-        [visible]="snippetView.refineByShow" (collapsedChange)="collapsedChange($event)">
-        Refined By Panel
-    </tam-splitter-panel>
-    <tam-splitter-panel [visible]="snippetView.middleShow" [size]="snippetView.middleWidth" [max]="snippetView.middleMax" [min]="snippetView.middleMin">
-        Side List Panel
-    </tam-splitter-panel>
-    <tam-splitter-panel [size]="snippetView.previewWidth" [max]="snippetView.previewMax" [min]="snippetView.previewMin">
-        Preview Panel
-    </tam-splitter-panel>
-</tam-splitter>
-<button (click)="collapse()">collapse</button>
-<button class="btn" (click)="changeDir()">change</button>
+<router-outlet></router-outlet>
