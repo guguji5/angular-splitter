@@ -81,7 +81,7 @@ export class TamSplitterComponent implements OnInit {
         });
     }
 
-    addSplitterPanel(panel: TamSplitterPanelComponent): void {
+    addPanel(panel: TamSplitterPanelComponent): void {
         panel.index = index();
         if (panel.visible) {
             this.displayedPanels.push(panel)
@@ -92,28 +92,28 @@ export class TamSplitterComponent implements OnInit {
         this.build();
     }
 
-    public updateArea(panel: TamSplitterPanelComponent): void {
-        // Only refresh if area is displayed (No need to check inside 'hidedAreas')
+    public updatePanel(panel: TamSplitterPanelComponent): void {
+        // Only refresh if panel is displayed (No need to check inside 'hidedPanels')
 
         const item = this.displayedPanels.find(a => a === panel);
         if (item) {
             this.build();
         }
     }
-    public showArea(panel: TamSplitterPanelComponent): void {
+    public showPanel(panel: TamSplitterPanelComponent): void {
         const area = this.hidedPanels.find(a => a === panel);
 
         if (area) {
             panel.setStyleVisibleAndDir(panel.visible, this.isDragging, this.direction);
 
-            const areas = this.hidedPanels.splice(this.hidedPanels.indexOf(area), 1);
-            this.displayedPanels.push(...areas);
+            const panels = this.hidedPanels.splice(this.hidedPanels.indexOf(area), 1);
+            this.displayedPanels.push(...panels);
 
             this.build();
         }
     }
 
-    public hideArea(panel: TamSplitterPanelComponent): void {
+    public hidePanel(panel: TamSplitterPanelComponent): void {
         const area = this.displayedPanels.find(a => a === panel);
 
         if (area) {
@@ -129,7 +129,7 @@ export class TamSplitterComponent implements OnInit {
             this.build();
         }
     }
-    public removeArea(panel: TamSplitterPanelComponent): void {
+    public removePanel(panel: TamSplitterPanelComponent): void {
         if (this.displayedPanels.some(a => a === panel)) {
             const area = <TamSplitterPanelComponent>this.displayedPanels.find(a => a === panel)
             this.displayedPanels.splice(this.displayedPanels.indexOf(area), 1);

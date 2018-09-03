@@ -12,7 +12,7 @@ export class TamSplitterPanelComponent implements OnInit {
     private _visible: boolean;
     @Input() set size(v: number | null) {
         this._size = Number(v);
-        this.splitterComponent.updateArea(this);
+        this.splitterComponent.updatePanel(this);
     }
 
     get size() {
@@ -46,10 +46,10 @@ export class TamSplitterPanelComponent implements OnInit {
         v = (typeof (v) === 'boolean') ? v : (v === 'false' ? false : true);
         this._visible = v;
         if (this.visible) {
-            this.splitterComponent.showArea(this);
+            this.splitterComponent.showPanel(this);
         }
         else {
-            this.splitterComponent.hideArea(this);
+            this.splitterComponent.hidePanel(this);
         }
     };
 
@@ -62,7 +62,7 @@ export class TamSplitterPanelComponent implements OnInit {
 
     ngOnInit() {
         if (this.splitterComponent) {
-            this.splitterComponent.addSplitterPanel(this);
+            this.splitterComponent.addPanel(this);
         }
 
         this.renderer.setStyle(this.elRef.nativeElement, 'flex-grow', '0');
@@ -70,7 +70,7 @@ export class TamSplitterPanelComponent implements OnInit {
     }
     ngOnDestroy(): void {
 
-        this.splitterComponent.removeArea(this);
+        this.splitterComponent.removePanel(this);
     }
 
     public setStyleOrder(value: number): void {
