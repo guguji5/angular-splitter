@@ -2,12 +2,10 @@
     background: gray;
     flex-grow: 0;
     flex-shrink: 0;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 60%;
-    
 }
-:host:hover{
-    /* cursor:move; */
+:host.horizontal:hover{
+    cursor:ew-resize;
+}
+:host.vertical:hover{
+    cursor:ns-resize;
 }

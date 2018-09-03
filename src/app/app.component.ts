@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 interface LayoutView {
+    direction: 'horizontal' | 'vertical'
+
     refinedByWidth: number;
     refinedByMax: number;
     refinedByMin: number;
@@ -23,6 +25,7 @@ interface LayoutView {
 export class AppComponent {
     title = 'angular';
     snippetView: LayoutView = {
+        direction: "horizontal",
         refinedByWidth: 20,
         refinedByMax: 30,
         refinedByMin: 10,
@@ -41,8 +44,9 @@ export class AppComponent {
     collapse() {
         this.snippetView.refineByShow = !this.snippetView.refineByShow;
     }
-    change() {
-        this.snippetView.middleShow = !this.snippetView.middleShow;
+    changeDir() {
+        // this.snippetView.middleShow = !this.snippetView.middleShow;
+        this.snippetView.direction = this.snippetView.direction === "horizontal" ? "vertical" : "horizontal"
     }
     collapsedChange(e) {
         if (e.collapsed) {
@@ -50,5 +54,8 @@ export class AppComponent {
         } else {
             this.snippetView.previewWidth = e.sizes[e.sizes.length - 1] - e.collapsedComponentSize
         }
+    }
+    sizeChange(e) {
+        console.log(e)
     }
 }

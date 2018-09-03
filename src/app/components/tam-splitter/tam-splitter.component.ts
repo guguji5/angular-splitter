@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, NgZone, ElementRef, ChangeDetectorRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, Input, NgZone, ElementRef, ChangeDetectorRef, Renderer2, HostBinding, Output, EventEmitter } from '@angular/core';
 import { TamSplitterPanelComponent } from '../tam-splitter-panel/tam-splitter-panel.component';
 import index from './../../services/count'
 
@@ -20,8 +20,24 @@ export class TamSplitterComponent implements OnInit {
     currentbarNum: number;
     draggingWithoutMove: boolean;
     private readonly dragListeners: Array<Function> = [];
-    direction: 'horizontal' | 'vertical' = 'horizontal';
     private isDragging: boolean = false;
+
+    private _direction: 'horizontal' | 'vertical' = 'horizontal';
+
+    @Input() set direction(v: 'horizontal' | 'vertical') {
+        v = (v === 'vertical') ? 'vertical' : 'horizontal';
+        this._direction = v;
+
+        [...this.displayedPanels, ...this.hidedPanels].forEach(panel => {
+            panel.setStyleVisibleAndDir(panel.visible, this.isDragging, this.direction);
+        });
+
+        this.build();
+    }
+
+    get direction(): 'horizontal' | 'vertical' {
+        return this._direction;
+    }
 
     private readonly dragStartValues = {
         sizePixelContainer: 0,
@@ -30,6 +46,10 @@ export class TamSplitterComponent implements OnInit {
         sizePercentA: 0,
         sizePercentB: 0,
     };
+    @Output() sizeChange: EventEmitter<any> = new EventEmitter();
+    @HostBinding('style.flex-direction') get cssFlexdirection() {
+        return (this.direction === 'horizontal') ? 'row' : 'column';
+    }
 
     constructor(private ngZone: NgZone, private elRef: ElementRef,
         private cdRef: ChangeDetectorRef,
@@ -92,7 +112,7 @@ export class TamSplitterComponent implements OnInit {
         this.build();
     }
 
-    public updatePanel(panel: TamSplitterPanelComponent): void {
+    updatePanel(panel: TamSplitterPanelComponent): void {
         // Only refresh if panel is displayed (No need to check inside 'hidedPanels')
 
         const item = this.displayedPanels.find(a => a === panel);
@@ -100,7 +120,7 @@ export class TamSplitterComponent implements OnInit {
             this.build();
         }
     }
-    public showPanel(panel: TamSplitterPanelComponent): void {
+    showPanel(panel: TamSplitterPanelComponent): void {
         const area = this.hidedPanels.find(a => a === panel);
 
         if (area) {
@@ -113,7 +133,7 @@ export class TamSplitterComponent implements OnInit {
         }
     }
 
-    public hidePanel(panel: TamSplitterPanelComponent): void {
+    hidePanel(panel: TamSplitterPanelComponent): void {
         const area = this.displayedPanels.find(a => a === panel);
 
         if (area) {
@@ -129,7 +149,7 @@ export class TamSplitterComponent implements OnInit {
             this.build();
         }
     }
-    public removePanel(panel: TamSplitterPanelComponent): void {
+    removePanel(panel: TamSplitterPanelComponent): void {
         if (this.displayedPanels.some(a => a === panel)) {
             const area = <TamSplitterPanelComponent>this.displayedPanels.find(a => a === panel)
             this.displayedPanels.splice(this.displayedPanels.indexOf(area), 1);
@@ -142,7 +162,7 @@ export class TamSplitterComponent implements OnInit {
         }
     }
     /* below function is used for the drag event */
-    public startDragging(startEvent: MouseEvent | TouchEvent, barOrder: number, barNum: number): void {
+    startDragging(startEvent: MouseEvent | TouchEvent, barOrder: number, barNum: number): void {
         startEvent.preventDefault();
 
         // Place code here to allow '(gutterClick)' event even if '[disabled]="true"'.
@@ -290,6 +310,14 @@ export class TamSplitterComponent implements OnInit {
                 }
 
             }
+        }
+        let sizeArr = this.displayedPanels.map(value => value.size)
+        if (sizeArr.length > 0) {
+            this.sizeChange.emit({
+                barNum: this.currentbarNum,
+                sizes: sizeArr
+            })
+
         }
 
         this.refreshStyleSizes();

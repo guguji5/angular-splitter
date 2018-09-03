@@ -9,7 +9,8 @@ import { TamSplitterComponent } from '../tam-splitter/tam-splitter.component';
 export class TamSplitterPanelComponent implements OnInit {
     private _order: number | null = null;
     private _size: number | null = null;
-    private _visible: boolean;
+    private _visible: boolean = true;
+
     @Input() set size(v: number | null) {
         this._size = Number(v);
         this.splitterComponent.updatePanel(this);
