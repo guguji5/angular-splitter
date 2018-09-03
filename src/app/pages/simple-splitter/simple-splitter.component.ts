@@ -11,7 +11,7 @@ export class SimpleSplitterComponent implements OnInit {
 
     ngOnInit() {
     }
-    snippetView: LayoutView = {
+    snippetView = {
         direction: "horizontal",
         refinedByWidth: 20,
         refinedByMax: 30,
