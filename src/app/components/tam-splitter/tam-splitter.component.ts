@@ -16,7 +16,7 @@ export class TamSplitterComponent implements OnInit {
     public readonly displayedPanels: Array<TamSplitterPanelComponent> = [];
     private readonly hidedPanels: Array<TamSplitterPanelComponent> = [];
 
-    @Input() splitterBarWidth: number;
+    @Input() splitterBarWidth: number = 8;
     currentbarNum: number;
     draggingWithoutMove: boolean;
     private readonly dragListeners: Array<Function> = [];
