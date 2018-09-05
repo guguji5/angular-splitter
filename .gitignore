@@ -10,3 +10,5 @@ node_modules.*/
 .classpath
 .c9/
 package-lock.json
+
+dist

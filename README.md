@@ -1,5 +1,22 @@
 # angular-splitter
-this is a angular splitter that could drag the responsive layout.
+> this is a angular splitter that could drag the responsive layout.
+## Online 
+
+[http://guguji5.top:8080/angular-splitter/](http://guguji5.top:8080/angular-splitter/)
+
+## How to run
+```
+git clone https://github.com/guguji5/angular-splitter.git
+cd angular-splitter
+ng serve --open
+```
+of course you must have angular-cli installed.
+
+## Angular Support
+
+angular 5~6
+
+## Document
 
 **Component `<tam-splitter>`**
 

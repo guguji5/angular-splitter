@@ -6,7 +6,9 @@ import { NestedSplitterComponent } from './pages/nested-splitter/nested-splitter
 
 const routes: Routes = [
   { path: 'simple', component: SimpleSplitterComponent },
-  { path: 'nested', component: NestedSplitterComponent }
+  { path: 'nested', component: NestedSplitterComponent },
+  { path: '', component: SimpleSplitterComponent },
+
 
 ];
 
