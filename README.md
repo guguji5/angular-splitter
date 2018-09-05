@@ -4,7 +4,7 @@ this is a angular splitter that could drag the responsive layout.
 **Component `<tam-splitter>`**
 
 @Input    | Type|Default|Details
--------- | ---
+-------- | ---|---|---
 direction | string|"horizontal"|Select split direction: "horizontal" or "vertical".
 splitterBarWidth    | number|8|Gutters's size (dragging elements) in pixels.
 
