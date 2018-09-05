@@ -11,7 +11,9 @@ splitterBarWidth    | number|8|Gutters's size (dragging elements) in pixels.
 @Output|Param|Details
 -------- | ---|---
 sizeChange|{barNum: number, sizes: Array`<number>`}|Emit when draging, return the index of bar and the sizes of panels
+
 **Component `<tam-splitter-panel>`**
+
 @Input    | Type|Default|Details
 -------- | ---|---|---
 size | number|null|Size of the panel in percent (value between 0 and 100).all panels sizes should be equal to 100
