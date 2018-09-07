@@ -1,5 +1,6 @@
 # angular-splitter
 > this is a angular splitter that could drag the responsive layout.
+![drawing](./splitter.gif)
 ## Online 
 
 [http://guguji5.top:8080/angular-splitter/](http://guguji5.top:8080/angular-splitter/)
