@@ -11,6 +11,7 @@
 ```
 git clone https://github.com/guguji5/angular-splitter.git
 cd angular-splitter
+npm install
 ng serve --open
 ```
 of course you must have angular-cli installed.
@@ -80,3 +81,4 @@ nested demo:
     </tam-splitter-panel>
 </tam-splitter>
 ```
+[中文README](https://blog.csdn.net/baidu_35407267/article/details/82527822)
