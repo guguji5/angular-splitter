@@ -28,6 +28,7 @@ angular 5~6
 -------- | ---|---|---
 direction | string|"horizontal"|Select split direction: "horizontal" or "vertical".
 splitterBarWidth    | number|8|Gutters's size (dragging elements) in pixels.
+useTransition| boolean or number| false|Use transition when collapsing or expanding. when this param is a number, it will be a millisecond value set to the property 'transition-duration', should be between 100 and 1000
 
 @Output|Param|Details
 -------- | ---|---
