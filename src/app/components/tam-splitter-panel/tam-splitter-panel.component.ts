@@ -4,13 +4,13 @@ import { TamSplitterComponent } from '../tam-splitter/tam-splitter.component';
 @Component({
     selector: 'tam-splitter-panel',
     templateUrl: './tam-splitter-panel.component.html',
-    styleUrls: ['./tam-splitter-panel.component.css']
+    styleUrls: ['./tam-splitter-panel.component.scss']
 })
 export class TamSplitterPanelComponent implements OnInit {
     private _order: number | null = null;
     private _size: number | null = null;
     private _visible: boolean = true;
-
+    public index: number;
     @Input() set size(v: number | null) {
         this._size = Number(v);
         this.splitterComponent.updatePanel(this);
@@ -29,7 +29,7 @@ export class TamSplitterPanelComponent implements OnInit {
     get order(): number | null {
         return this._order;
     }
-    @Input() index: number;
+
 
     @Input() max: number;
     @Input() min: number;
@@ -37,11 +37,31 @@ export class TamSplitterPanelComponent implements OnInit {
         let sizeArr = this.splitterComponent.displayedPanels.map(value => value.size)
         // prevent the event fired in the init process
         if (sizeArr.length > 0) {
+            if (this.splitterComponent.useTransition) {
+                // if the useTransition is set true, then use 300 ms
+                if (this.splitterComponent.useTransition === true) {
+                    this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', '0.3s');
+                } else {
+                    this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', this.splitterComponent.useTransition / 1000 + "s");
+                }
+            }
             this.collapsedChange.emit({
                 collapsed: !v,
                 sizes: sizeArr,
                 collapsedComponentSize: this.size
             })
+            // after the collapse event, set the transition back to 0s;
+            if (this.splitterComponent.useTransition) {
+                if (this.splitterComponent.useTransition === true) {
+                    setTimeout(() => {
+                        this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', '0s');
+                    }, 300)
+                } else {
+                    setTimeout(() => {
+                        this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', '0s');
+                    }, this.splitterComponent.useTransition)
+                }
+            }
         }
 
         v = (typeof (v) === 'boolean') ? v : (v === 'false' ? false : true);

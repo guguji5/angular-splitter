@@ -10,12 +10,12 @@ interface IPoint {
 @Component({
     selector: 'tam-splitter',
     templateUrl: './tam-splitter.component.html',
-    styleUrls: ['./tam-splitter.component.css']
+    styleUrls: ['./tam-splitter.component.scss']
 })
 export class TamSplitterComponent implements OnInit {
     public readonly displayedPanels: Array<TamSplitterPanelComponent> = [];
     private readonly hidedPanels: Array<TamSplitterPanelComponent> = [];
-
+    @Input() useTransition: boolean | number = false;
     @Input() splitterBarWidth: number = 8;
     currentbarNum: number;
     draggingWithoutMove: boolean;
@@ -57,6 +57,9 @@ export class TamSplitterComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (typeof (this.useTransition) === "number" && this.useTransition < 100) {
+            console.warn(`if the input 'useTransition' is a number, it's a millisecond value. Please set a number between 100 and 1000,`)
+        }
     }
 
 

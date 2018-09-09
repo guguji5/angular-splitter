@@ -4,7 +4,7 @@ import { getOrCreateChangeDetectorRef } from '@angular/core/src/render3/di';
 @Component({
     selector: 'tam-splitter-bar',
     templateUrl: './tam-splitter-bar.component.html',
-    styleUrls: ['./tam-splitter-bar.component.css']
+    styleUrls: ['./tam-splitter-bar.component.scss']
 })
 export class TamSplitterBarComponent implements OnInit {
     @Input() width;

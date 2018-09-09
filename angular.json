@@ -23,7 +23,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss",
+              "src/forkMeInGithub.scss"
             ],
             "scripts": []
           },

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
     selector: 'simple-splitter',
     templateUrl: './simple-splitter.component.html',
-    styleUrls: ['./simple-splitter.component.css']
+    styleUrls: ['./simple-splitter.component.scss']
 })
 export class SimpleSplitterComponent implements OnInit {
 

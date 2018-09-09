@@ -1,0 +1,13 @@
+:host{
+    background: gray;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    &.horizontal:hover{
+        cursor:ew-resize;
+    }
+
+    &.vertical:hover{
+        cursor:ns-resize;
+    }
+}
