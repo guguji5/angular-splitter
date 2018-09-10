@@ -40,9 +40,9 @@ export class TamSplitterPanelComponent implements OnInit {
             if (this.splitterComponent.useTransition) {
                 // if the useTransition is set true, then use 300 ms
                 if (this.splitterComponent.useTransition === true) {
-                    this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', '0.3s');
+                    this.splitterComponent.setTransitionTime(300);
                 } else {
-                    this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', this.splitterComponent.useTransition / 1000 + "s");
+                    this.splitterComponent.setTransitionTime(this.splitterComponent.useTransition);
                 }
             }
             this.collapsedChange.emit({
@@ -54,11 +54,12 @@ export class TamSplitterPanelComponent implements OnInit {
             if (this.splitterComponent.useTransition) {
                 if (this.splitterComponent.useTransition === true) {
                     setTimeout(() => {
-                        this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', '0s');
+                        this.splitterComponent.setTransitionTime(0);
                     }, 300)
+
                 } else {
                     setTimeout(() => {
-                        this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', '0s');
+                        this.splitterComponent.setTransitionTime(0);
                     }, this.splitterComponent.useTransition)
                 }
             }
@@ -79,7 +80,7 @@ export class TamSplitterPanelComponent implements OnInit {
     }
     @Output() collapsedChange: EventEmitter<any> = new EventEmitter();
 
-    constructor(@Optional() public splitterComponent: TamSplitterComponent, private renderer: Renderer2, private elRef: ElementRef) { }
+    constructor(@Optional() public splitterComponent: TamSplitterComponent, public renderer: Renderer2, private elRef: ElementRef) { }
 
     ngOnInit() {
         if (this.splitterComponent) {
@@ -96,6 +97,9 @@ export class TamSplitterPanelComponent implements OnInit {
 
     public setStyleOrder(value: number): void {
         this.renderer.setStyle(this.elRef.nativeElement, 'order', value);
+    }
+    public setStyleTransitionTime(value: string): void {
+        this.renderer.setStyle(this.elRef.nativeElement, 'transition-duration', value);
     }
     public setStyleFlexbasis(value: string): void {
         this.renderer.setStyle(this.elRef.nativeElement, 'flex-basis', value);

@@ -164,6 +164,11 @@ export class TamSplitterComponent implements OnInit {
             this.hidedPanels.splice(this.hidedPanels.indexOf(area), 1);
         }
     }
+    setTransitionTime(ms: number): void {
+        this.displayedPanels.forEach((panel: TamSplitterPanelComponent) => {
+            panel.setStyleTransitionTime(ms / 1000 + 's')
+        })
+    }
     /* below function is used for the drag event */
     startDragging(startEvent: MouseEvent | TouchEvent, barOrder: number, barNum: number): void {
         startEvent.preventDefault();
