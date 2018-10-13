@@ -9,6 +9,7 @@ node_modules.*/
 .project
 .classpath
 .c9/
+.vscode/
 package-lock.json
 
 dist

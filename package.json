@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy": " ng build --prod --base-href /angular-splitter/ && rsync -avz --delete ./dist/angular/* root@39.106.198.9:/opt/tomcat8/apache-tomcat-8.5.29/webapps/angular-splitter"
   },
   "private": true,
   "dependencies": {

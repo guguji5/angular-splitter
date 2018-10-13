@@ -16,6 +16,8 @@ export class TamSplitterComponent implements OnInit {
     public readonly displayedPanels: Array<TamSplitterPanelComponent> = [];
     private readonly hidedPanels: Array<TamSplitterPanelComponent> = [];
     @Input() useTransition: boolean | number = false;
+    // the type interface of the layout, that will effact the behavior of drag. Temporarily it has two types.
+    @Input() type: 'standard' | 'macNotes' = 'standard';
     @Input() splitterBarWidth: number = 8;
     currentbarNum: number;
     draggingWithoutMove: boolean;
@@ -65,27 +67,10 @@ export class TamSplitterComponent implements OnInit {
 
 
     ngAfterViewInit() {
+        console.log(this.isType('macNotes'));
     }
 
     build() {
-        // const totalUserSize = <number>this.displayedPanels.reduce((total: number, panel: TamSplitterPanelComponent) => {
-        //     return panel.size ? total + Number(panel.size) : total
-        // }, 0);
-        // console.log(this.displayedPanels);
-        // if (totalUserSize < 100) {
-        //     const panelLength = this.displayedPanels.length;
-        //     const averageSize = 100 / panelLength;
-        //     this.displayedPanels.forEach((panel: TamSplitterPanelComponent, key: number) => {
-        //         panel.setStyleFlexbasis(`calc( ${panel.size}% - ${this.splitterBarWidth * (this.displayedPanels.length - 1) / this.displayedPanels.length}px )`)
-        //         panel.order = 2 * key;
-        //     })
-        // } else {
-        //     this.displayedPanels.forEach((panel: TamSplitterPanelComponent, key: number) => {
-        //         panel.setStyleFlexbasis(`calc( ${panel.size}% - ${this.splitterBarWidth * (this.displayedPanels.length - 1) / this.displayedPanels.length}px )`)
-        //         panel.order = 2 * key;
-        //     })
-        // }
-
         if (this.displayedPanels.every(a => a.index !== null)) {
             this.displayedPanels.sort((a, b) => (<number>a.index) - (<number>b.index));
         }
@@ -95,6 +80,9 @@ export class TamSplitterComponent implements OnInit {
             panel.order = 2 * key;
         })
         this.refreshStyleSizes();
+    }
+    private isType(type: string): boolean {
+        return this.type === type;
     }
     private refreshStyleSizes(): void {
         const sumbarSize = this.splitterBarWidth * (this.displayedPanels.length - 1);
@@ -184,8 +172,18 @@ export class TamSplitterComponent implements OnInit {
 
 
         const panelA = this.displayedPanels.find(a => a.order === barOrder - 1);
-        const panelB = this.displayedPanels.find(a => a.order === barOrder + 1);
 
+        let alterPanelA; // the alternative of A panel
+        if (barOrder === 3 && this.displayedPanels.length === 3 && this.direction === "horizontal" && this.isType('macNotes')) {
+            alterPanelA = this.displayedPanels.find(a => a.order === 0);
+        }
+        let panelB;
+        // as notes on mac does, when user drag the left panel, its width should give the last one.
+        if (barOrder === 1 && this.displayedPanels.length === 3 && this.direction === "horizontal" && this.isType('macNotes')) {
+            panelB = this.displayedPanels.find(a => a.order === 4);
+        } else {
+            panelB = this.displayedPanels.find(a => a.order === barOrder + 1);
+        }
         if (!panelA || !panelB) {
             return;
         }
@@ -218,13 +216,13 @@ export class TamSplitterComponent implements OnInit {
         }
 
         this.ngZone.runOutsideAngular(() => {
-            this.dragListeners.push(this.renderer.listen('document', 'mousemove', (e: MouseEvent) => this.dragEvent(e, start, panelA, panelB)));
-            this.dragListeners.push(this.renderer.listen('document', 'touchmove', (e: TouchEvent) => this.dragEvent(e, start, panelA, panelB)));
+            this.dragListeners.push(this.renderer.listen('document', 'mousemove', (e: MouseEvent) => this.dragEvent(e, start, panelA, panelB, alterPanelA)));
+            this.dragListeners.push(this.renderer.listen('document', 'touchmove', (e: TouchEvent) => this.dragEvent(e, start, panelA, panelB, alterPanelA)));
         });
         this.isDragging = true;
     }
 
-    private dragEvent(event: MouseEvent | TouchEvent, start: IPoint, panelA: TamSplitterPanelComponent, panelB: TamSplitterPanelComponent): void {
+    private dragEvent(event: MouseEvent | TouchEvent, start: IPoint, panelA: TamSplitterPanelComponent, panelB: TamSplitterPanelComponent, alterPanelA: TamSplitterPanelComponent): void {
         if (!this.isDragging) {
             return;
         }
@@ -246,10 +244,10 @@ export class TamSplitterComponent implements OnInit {
             return;
         }
         this.draggingWithoutMove = false;
-        this.drag(start, end, panelA, panelB);
+        this.drag(start, end, panelA, panelB, alterPanelA);
     }
 
-    private drag(start: IPoint, end: IPoint, panelA: TamSplitterPanelComponent, panelB: TamSplitterPanelComponent): void {
+    private drag(start: IPoint, end: IPoint, panelA: TamSplitterPanelComponent, panelB: TamSplitterPanelComponent, alterPanelA: TamSplitterPanelComponent): void {
         // ¤ AREAS SIZE PIXEL
 
         const devicePixelRatio = window.devicePixelRatio || 1;
@@ -260,19 +258,6 @@ export class TamSplitterComponent implements OnInit {
 
         let newSizePixelA = this.dragStartValues.sizePixelA - offsetPixel;
         let newSizePixelB = this.dragStartValues.sizePixelB + offsetPixel;
-
-        // if (newSizePixelA < this.splitterBarWidth && newSizePixelB < this.splitterBarWidth) {
-        //     // WTF.. get out of here!
-        //     return;
-        // }
-        // else if (newSizePixelA < this.splitterBarWidth) {
-        //     newSizePixelB += newSizePixelA;
-        //     newSizePixelA = 0;
-        // }
-        // else if (newSizePixelB < this.splitterBarWidth) {
-        //     newSizePixelA += newSizePixelB;
-        //     newSizePixelB = 0;
-        // }
 
         // ¤ AREAS SIZE PERCENT
 
@@ -304,14 +289,33 @@ export class TamSplitterComponent implements OnInit {
                     panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
                 } else if (panelA.size <= panelA.min) {
                     panelA.size = panelA.min;
-                    panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
+                    // handle the macNotes behaivor
+                    if (alterPanelA) {
+                        // calculate alterA percentage with the size.
+                        let sizePixelalterA = this.dragStartValues.sizePixelContainer - this.dragStartValues.sizePixelA - this.dragStartValues.sizePixelB;
+                        let offsetPixelalterA = offsetPixel - (this.dragStartValues.sizePixelA - this.dragStartValues.sizePixelContainer * panelA.min / 100);
+                        let newSizePixelalterA = sizePixelalterA - offsetPixelalterA;
+                        if (newSizePixelalterA <= this.dragStartValues.sizePixelContainer * alterPanelA.min / 100) {
+                            alterPanelA.size = alterPanelA.min
+                        } else {
+                            alterPanelA.size = newSizePixelalterA / this.dragStartValues.sizePixelContainer * 100;
+                            panelB.size = 100 - panelA.size - alterPanelA.size;
+                        }
+                    } else {
+                        panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
+                    }
                 } else {
                     panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
                 }
 
                 if (panelB.size >= panelB.max) {
-                    panelB.size = panelB.max;
-                    panelA.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelB.size;
+                    if (alterPanelA) {
+                        panelB.size = panelB.max;
+                    } else {
+                        panelB.size = panelB.max;
+                        panelA.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelB.size;
+                    }
+
                 } else if (panelB.size <= panelB.min) {
                     panelB.size = panelB.min;
                     panelA.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelB.size;

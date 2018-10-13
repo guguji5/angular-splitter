@@ -1,11 +1,12 @@
 # angular-splitter
-> this is a angular splitter that could drag the responsive layout.
+> this is a angular splitter that could drag the responsive layout, and also act like the layout of notes on mac.
 
 ![drawing](./splitter.gif)
+![drawing](./macnotes.gif)
 
 ## Online 
 
-[http://guguji5.top:8080/angular-splitter/](http://guguji5.top:8080/angular-splitter/)
+[http://angular-splitter.guguji5.top](http://angular-splitter.guguji5.top)
 
 ## How to run
 ```
@@ -29,6 +30,7 @@ angular 5~6
 direction | string|"horizontal"|Select split direction: "horizontal" or "vertical".
 splitterBarWidth    | number|8|Gutters's size (dragging elements) in pixels.
 useTransition| boolean or number| false|Use transition when collapsing or expanding. when this param is a number, it will be a millisecond value set to the property 'transition-duration', should be between 100 and 1000
+type | string| 'standard' | it has two value(standard, macNotes), which controls the behavior of the drag, macNotes type will act like the notes on mac
 
 @Output|Param|Details
 -------- | ---|---
