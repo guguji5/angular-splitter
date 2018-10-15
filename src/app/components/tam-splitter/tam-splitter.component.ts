@@ -261,68 +261,58 @@ export class TamSplitterComponent implements OnInit {
 
         // ¤ AREAS SIZE PERCENT
 
-        if (newSizePixelA === 0) {
-            panelB.size += panelA.size;
-            panelA.size = 0;
+        // NEW_PERCENT = START_PERCENT / START_PIXEL * NEW_PIXEL;
+        if (this.dragStartValues.sizePercentA === 0) {
+            panelB.size = this.dragStartValues.sizePercentB / this.dragStartValues.sizePixelB * newSizePixelB;
+            panelA.size = this.dragStartValues.sizePercentB - panelB.size;
         }
-        else if (newSizePixelB === 0) {
-            panelA.size += panelB.size;
-            panelB.size = 0;
+        else if (this.dragStartValues.sizePercentB === 0) {
+            panelA.size = this.dragStartValues.sizePercentA / this.dragStartValues.sizePixelA * newSizePixelA;
+            panelB.size = this.dragStartValues.sizePercentA - panelA.size;
         }
         else {
-            // NEW_PERCENT = START_PERCENT / START_PIXEL * NEW_PIXEL;
-            if (this.dragStartValues.sizePercentA === 0) {
-                panelB.size = this.dragStartValues.sizePercentB / this.dragStartValues.sizePixelB * newSizePixelB;
-                panelA.size = this.dragStartValues.sizePercentB - panelB.size;
-            }
-            else if (this.dragStartValues.sizePercentB === 0) {
-                panelA.size = this.dragStartValues.sizePercentA / this.dragStartValues.sizePixelA * newSizePixelA;
-                panelB.size = this.dragStartValues.sizePercentA - panelA.size;
-            }
-            else {
-                // based on the logical percentage panel width(A and B);
-                panelA.size = this.dragStartValues.sizePercentA / this.dragStartValues.sizePixelA * newSizePixelA;
-                panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
+            // based on the logical percentage panel width(A and B);
+            panelA.size = this.dragStartValues.sizePercentA / this.dragStartValues.sizePixelA * newSizePixelA;
+            panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
 
-                if (panelA.size >= panelA.max) {
-                    panelA.size = panelA.max;
-                    panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
-                } else if (panelA.size <= panelA.min) {
-                    panelA.size = panelA.min;
-                    // handle the macNotes behaivor
-                    if (alterPanelA) {
-                        // calculate alterA percentage with the size.
-                        let sizePixelalterA = this.dragStartValues.sizePixelContainer - this.dragStartValues.sizePixelA - this.dragStartValues.sizePixelB;
-                        let offsetPixelalterA = offsetPixel - (this.dragStartValues.sizePixelA - this.dragStartValues.sizePixelContainer * panelA.min / 100);
-                        let newSizePixelalterA = sizePixelalterA - offsetPixelalterA;
-                        if (newSizePixelalterA <= this.dragStartValues.sizePixelContainer * alterPanelA.min / 100) {
-                            alterPanelA.size = alterPanelA.min
-                        } else {
-                            alterPanelA.size = newSizePixelalterA / this.dragStartValues.sizePixelContainer * 100;
-                            panelB.size = 100 - panelA.size - alterPanelA.size;
-                        }
+            if (panelA.size >= panelA.max) {
+                panelA.size = panelA.max;
+                panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
+            } else if (panelA.size <= panelA.min) {
+                panelA.size = panelA.min;
+                // handle the macNotes behaivor
+                if (alterPanelA) {
+                    // calculate alterA percentage with the size.
+                    let sizePixelalterA = this.dragStartValues.sizePixelContainer - this.dragStartValues.sizePixelA - this.dragStartValues.sizePixelB;
+                    let offsetPixelalterA = offsetPixel - (this.dragStartValues.sizePixelA - this.dragStartValues.sizePixelContainer * panelA.min / 100);
+                    let newSizePixelalterA = sizePixelalterA - offsetPixelalterA;
+                    if (newSizePixelalterA <= this.dragStartValues.sizePixelContainer * alterPanelA.min / 100) {
+                        alterPanelA.size = alterPanelA.min
                     } else {
-                        panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
+                        alterPanelA.size = newSizePixelalterA / this.dragStartValues.sizePixelContainer * 100;
+                        panelB.size = 100 - panelA.size - alterPanelA.size;
                     }
                 } else {
                     panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
                 }
+            } else {
+                panelB.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelA.size;
+            }
 
-                if (panelB.size >= panelB.max) {
-                    if (alterPanelA) {
-                        panelB.size = panelB.max;
-                    } else {
-                        panelB.size = panelB.max;
-                        panelA.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelB.size;
-                    }
-
-                } else if (panelB.size <= panelB.min) {
-                    panelB.size = panelB.min;
+            if (panelB.size >= panelB.max) {
+                if (alterPanelA) {
+                    panelB.size = panelB.max;
+                } else {
+                    panelB.size = panelB.max;
                     panelA.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelB.size;
                 }
 
+            } else if (panelB.size <= panelB.min) {
+                panelB.size = panelB.min;
+                panelA.size = (this.dragStartValues.sizePercentA + this.dragStartValues.sizePercentB) - panelB.size;
             }
         }
+
         let sizeArr = this.displayedPanels.map(value => value.size)
         if (sizeArr.length > 0) {
             this.sizeChange.emit({
