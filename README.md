@@ -4,9 +4,6 @@
 ![drawing](./splitter.gif)
 ![drawing](./macnotes.gif)
 
-## Online 
-
-[http://angular-splitter.guguji5.top](http://angular-splitter.guguji5.top)
 
 ## How to run
 ```
