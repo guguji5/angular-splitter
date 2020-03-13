@@ -1,7 +1,7 @@
 # angular-splitter
 > this is a angular splitter that could drag the responsive layout, and also act like the layout of notes on mac.
 
-![drawing](http://img-ys011.didistatic.com/static/dc2img.gif)
+![drawing](http://img-ys011.didistatic.com/static/dc2img/splitter.gif)
 ![drawing](http://img-ys011.didistatic.com/static/dc2img/macnotes.gif)
 
 
